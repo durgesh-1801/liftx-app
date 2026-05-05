@@ -1,17 +1,28 @@
 # See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# compiled output
+# ─── Environment variables (NEVER commit these) ───────────────────────────────
+.env
+.env.*
+!.env.example
+*.local
+
+# ─── Compiled output ──────────────────────────────────────────────────────────
 dist
 tmp
 out-tsc
 *.tsbuildinfo
+
+# ─── Expo / React Native ──────────────────────────────────────────────────────
 .expo
 .expo-shared
+expo-env.d.ts
+android/
+ios/
 
-# dependencies
+# ─── Dependencies ─────────────────────────────────────────────────────────────
 node_modules
 
-# IDEs and editors
+# ─── IDEs and editors ─────────────────────────────────────────────────────────
 /.idea
 .project
 .classpath
@@ -27,23 +38,26 @@ node_modules
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# misc
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+testem.log
+*.log
+
+# ─── Misc ─────────────────────────────────────────────────────────────────────
 /.sass-cache
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
 /typings
 
-# System Files
+# ─── System Files ─────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
-
-# Replit
+# ─── Replit internals (not needed on GitHub) ──────────────────────────────────
 .cache/
 .local/
+.cursor/
+.github/
