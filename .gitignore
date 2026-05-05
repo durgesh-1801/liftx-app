@@ -1,29 +1,27 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# ─── Environment variables (NEVER commit these) ───────────────────────────────
+# Environment variables
 .env
 .env.*
 !.env.example
 *.local
 
-# ─── Compiled output ──────────────────────────────────────────────────────────
+# Build output
 dist
 tmp
 out-tsc
 *.tsbuildinfo
 
-# ─── Expo / React Native ──────────────────────────────────────────────────────
+# Expo / React Native
 .expo
 .expo-shared
 expo-env.d.ts
 android/
 ios/
 
-# ─── Dependencies ─────────────────────────────────────────────────────────────
+# Dependencies
 node_modules
 
-# ─── IDEs and editors ─────────────────────────────────────────────────────────
-/.idea
+# IDEs
+.idea
 .project
 .classpath
 .c9/
@@ -31,33 +29,36 @@ node_modules
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# ─── Logs ─────────────────────────────────────────────────────────────────────
+# Logs
 npm-debug.log
 yarn-error.log
 yarn-debug.log
-testem.log
 *.log
 
-# ─── Misc ─────────────────────────────────────────────────────────────────────
-/.sass-cache
+# Misc
+.sass-cache
 /connect.lock
 /coverage
 /libpeerconnection.log
 /typings
 
-# ─── System Files ─────────────────────────────────────────────────────────────
+# System
 .DS_Store
 Thumbs.db
 
-# ─── Replit internals (not needed on GitHub) ──────────────────────────────────
+# Replit junk
+.agents
+artifacts
+attached_assets
+.replit
+replit.md
 .cache/
 .local/
 .cursor/
-.github/
