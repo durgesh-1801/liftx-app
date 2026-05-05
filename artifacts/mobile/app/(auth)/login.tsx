@@ -29,29 +29,47 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!email.trim() || !password) {
       setError("Please fill in all fields");
       return;
     }
     setLoading(true);
     setError("");
     try {
-      await signIn(email.trim(), password);
+      await signIn(email.trim().toLowerCase(), password);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      // Explicitly navigate — don't rely solely on context re-render
+      router.replace("/(tabs)");
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Login failed";
-      setError(msg.includes("invalid-credential") ? "Invalid email or password" : msg);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      // Show the real Firebase error code for debugging + a friendly fallback
+      if (e instanceof Error) {
+        const code = (e as { code?: string }).code ?? "";
+        if (
+          code.includes("invalid-credential") ||
+          code.includes("wrong-password") ||
+          code.includes("user-not-found") ||
+          code.includes("invalid-email")
+        ) {
+          setError("Incorrect email or password. Please try again.");
+        } else if (code.includes("too-many-requests")) {
+          setError("Too many attempts. Please try again later.");
+        } else if (code.includes("network-request-failed")) {
+          setError("Network error. Check your connection.");
+        } else {
+          // Show raw code so we can debug further
+          setError(`Sign-in failed: ${code || e.message}`);
+        }
+      } else {
+        setError("Sign-in failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
+    container: { flex: 1, backgroundColor: colors.background },
     inner: {
       flex: 1,
       paddingHorizontal: 28,
@@ -97,15 +115,14 @@ export default function LoginScreen() {
       fontFamily: "Inter_400Regular",
       color: colors.foreground,
     },
-    eyeBtn: {
-      padding: 4,
-    },
+    eyeBtn: { padding: 4 },
     error: {
       color: colors.destructive,
       fontSize: 14,
       fontFamily: "Inter_400Regular",
       marginBottom: 16,
       textAlign: "center",
+      lineHeight: 20,
     },
     loginBtn: {
       backgroundColor: colors.primary,
@@ -115,25 +132,15 @@ export default function LoginScreen() {
       justifyContent: "center",
       marginTop: 8,
     },
-    loginBtnDisabled: {
-      opacity: 0.6,
-    },
+    loginBtnDisabled: { opacity: 0.6 },
     loginBtnText: {
       color: colors.primaryForeground,
       fontSize: 16,
       fontFamily: "Inter_700Bold",
       letterSpacing: 0.5,
     },
-    divider: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginVertical: 24,
-    },
-    dividerLine: {
-      flex: 1,
-      height: 1,
-      backgroundColor: colors.border,
-    },
+    divider: { flexDirection: "row", alignItems: "center", marginVertical: 24 },
+    dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
     dividerText: {
       color: colors.mutedForeground,
       fontSize: 13,
@@ -148,11 +155,7 @@ export default function LoginScreen() {
       borderWidth: 1,
       borderColor: colors.border,
     },
-    signupBtnText: {
-      color: colors.foreground,
-      fontSize: 16,
-      fontFamily: "Inter_600SemiBold",
-    },
+    signupBtnText: { color: colors.foreground, fontSize: 16, fontFamily: "Inter_600SemiBold" },
   });
 
   return (

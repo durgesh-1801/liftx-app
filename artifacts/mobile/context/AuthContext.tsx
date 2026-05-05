@@ -39,30 +39,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (uid: string) => {
     try {
-      const docRef = doc(db, "users", uid);
-      const snap = await getDoc(docRef);
+      const snap = await getDoc(doc(db, "users", uid));
       if (snap.exists()) {
         setProfile(snap.data() as UserProfile);
       }
     } catch (e) {
-      console.warn("Failed to fetch profile", e);
+      console.warn("fetchProfile error:", e);
     }
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
+      // Clear loading immediately — don't block on Firestore fetch
+      setLoading(false);
       if (firebaseUser) {
-        await fetchProfile(firebaseUser.uid);
+        // Fetch profile in background, non-blocking
+        fetchProfile(firebaseUser.uid);
       } else {
         setProfile(null);
       }
-      setLoading(false);
     });
     return unsubscribe;
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    // Just authenticate — onAuthStateChanged handles the rest
     await signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -78,10 +80,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       lastWorkoutDate: null,
       createdAt: new Date().toISOString(),
     };
-    await setDoc(doc(db, "users", cred.user.uid), {
+    // Write to Firestore in background — don't block navigation
+    setDoc(doc(db, "users", cred.user.uid), {
       ...userProfile,
       createdAt: serverTimestamp(),
-    });
+    }).catch((e) => console.warn("Failed to write user profile:", e));
     setProfile(userProfile);
   };
 
@@ -91,9 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const refreshProfile = async () => {
-    if (user) {
-      await fetchProfile(user.uid);
-    }
+    if (user) await fetchProfile(user.uid);
   };
 
   return (

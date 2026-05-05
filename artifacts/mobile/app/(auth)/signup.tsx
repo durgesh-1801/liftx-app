@@ -32,7 +32,7 @@ export default function SignupScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = async () => {
-    if (!displayName || !email || !password || !confirmPassword) {
+    if (!displayName.trim() || !email.trim() || !password || !confirmPassword) {
       setError("Please fill in all fields");
       return;
     }
@@ -47,36 +47,42 @@ export default function SignupScreen() {
     setLoading(true);
     setError("");
     try {
-      await signUp(email.trim(), password, displayName.trim());
+      await signUp(email.trim().toLowerCase(), password, displayName.trim());
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      // Explicitly navigate after signup
+      router.replace("/(tabs)");
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Signup failed";
-      setError(msg.includes("email-already-in-use") ? "Email already in use" : msg);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      if (e instanceof Error) {
+        const code = (e as { code?: string }).code ?? "";
+        if (code.includes("email-already-in-use")) {
+          setError("An account with this email already exists.");
+        } else if (code.includes("invalid-email")) {
+          setError("Please enter a valid email address.");
+        } else if (code.includes("weak-password")) {
+          setError("Password is too weak. Use at least 6 characters.");
+        } else if (code.includes("network-request-failed")) {
+          setError("Network error. Check your connection.");
+        } else {
+          setError(`Sign-up failed: ${code || e.message}`);
+        }
+      } else {
+        setError("Sign-up failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
+    container: { flex: 1, backgroundColor: colors.background },
     inner: {
       paddingHorizontal: 28,
       paddingTop: insets.top + (Platform.OS === "web" ? 67 : 20),
       paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 40),
     },
-    backBtn: {
-      marginBottom: 32,
-    },
-    title: {
-      fontSize: 32,
-      fontFamily: "Inter_700Bold",
-      color: colors.foreground,
-      marginBottom: 4,
-    },
+    backBtn: { marginBottom: 32 },
+    title: { fontSize: 32, fontFamily: "Inter_700Bold", color: colors.foreground, marginBottom: 4 },
     subtitle: {
       fontSize: 16,
       fontFamily: "Inter_400Regular",
@@ -115,6 +121,7 @@ export default function SignupScreen() {
       fontFamily: "Inter_400Regular",
       marginBottom: 16,
       textAlign: "center",
+      lineHeight: 20,
     },
     createBtn: {
       backgroundColor: colors.primary,
@@ -124,11 +131,7 @@ export default function SignupScreen() {
       justifyContent: "center",
       marginTop: 8,
     },
-    createBtnText: {
-      color: colors.primaryForeground,
-      fontSize: 16,
-      fontFamily: "Inter_700Bold",
-    },
+    createBtnText: { color: colors.primaryForeground, fontSize: 16, fontFamily: "Inter_700Bold" },
   });
 
   return (
