@@ -1,0 +1,205 @@
+You are a senior React Native + Expo engineer building a production-ready mobile app.
+
+Build a complete Expo (React Native) mobile app called **"LiftX"** — a competitive gym workout tracker with social leaderboard features.
+
+---
+
+# 🎯 CORE OBJECTIVE
+
+Create a high-performance, clean UI mobile app where users:
+
+* Create workout routines
+* Log sets (reps, weight)
+* Track personal records (PRs)
+* View progress charts
+* Compete on leaderboards (volume & streak)
+
+---
+
+# 🧱 TECH STACK (STRICT)
+
+* Expo (latest)
+* React Native (functional components + hooks)
+* Firebase (Auth + Firestore)
+* React Navigation
+* Zustand or Context API (state management)
+* Victory Native or Recharts (charts)
+
+---
+
+# 📁 PROJECT STRUCTURE
+
+Use a clean scalable structure:
+
+/src
+/components
+/screens
+/navigation
+/services
+/store
+/utils
+/constants
+
+---
+
+# 🔐 AUTH SYSTEM
+
+* Firebase Email/Password login + signup
+* Persist user session
+* Store user profile in Firestore
+
+---
+
+# 📱 SCREENS TO BUILD
+
+## 1. Auth Screens
+
+* LoginScreen
+* SignupScreen
+
+## 2. Home Dashboard
+
+* Show:
+
+  * Today’s workout
+  * Current streak
+  * Weekly volume
+  * Quick "Start Workout" button
+
+## 3. Workout Logger (MOST IMPORTANT)
+
+* Add exercises
+* Log sets:
+
+  * reps
+  * weight
+* Autofill last used weight
+* Add rest timer (basic countdown)
+* Button: "Complete Workout"
+
+## 4. Routine Builder
+
+* Create/edit routines
+* Select from predefined exercise list (mock 50–100 exercises)
+
+## 5. Progress Screen
+
+* Show charts:
+
+  * Strength progression (line chart)
+  * Weekly volume (bar chart)
+
+## 6. Leaderboard Screen
+
+* Weekly ranking based on:
+
+  * Total volume
+* Show:
+
+  * Rank
+  * Username
+  * Score
+
+## 7. Profile Screen
+
+* Show:
+
+  * Total workouts
+  * PRs
+  * Streak
+
+---
+
+# 🔥 CORE FEATURES TO IMPLEMENT
+
+## 1. Workout Logging Logic
+
+Each set:
+volume = reps × weight
+
+Store workouts in Firestore:
+workouts/
+userId/
+workoutId:
+date
+exercises[]
+
+---
+
+## 2. PR DETECTION
+
+* Compare new set with previous max
+* If PR:
+
+  * Show alert/modal: "New PR 🎉"
+
+---
+
+## 3. LEADERBOARD SYSTEM
+
+* Compute weekly total volume per user
+
+* Store in:
+  leaderboard_weekly/
+  userId:
+  volume
+
+* Fetch and sort users by volume
+
+---
+
+## 4. STREAK SYSTEM
+
+* Track consecutive workout days
+* Store streak in user profile
+
+---
+
+# 🎨 UI REQUIREMENTS
+
+* Clean, modern dark theme
+* Large buttons (gym-friendly)
+* Minimal typing
+* Fast interactions
+* Use cards, shadows, rounded corners
+
+---
+
+# ⚡ PERFORMANCE
+
+* Use FlatList for lists
+* Avoid unnecessary re-renders
+* Optimize Firestore reads
+
+---
+
+# 🧠 BONUS (IF POSSIBLE)
+
+* Suggest next weight based on last workout
+* Simple animation on PR
+
+---
+
+# 📦 OUTPUT REQUIREMENTS
+
+* Complete working Expo project
+* All screens connected via navigation
+* Firebase fully integrated
+* Clean readable code
+* Comments explaining key logic
+
+---
+
+# 🚫 DO NOT
+
+* Use outdated React patterns
+* Overcomplicate state management
+* Add unnecessary dependencies
+
+---
+
+# 🎯 GOAL
+
+This app should feel like a simplified version of Strong/Hevy but with leaderboard competition.
+
+Generate complete code step-by-step starting with project setup, then each screen, then Firebase integration.
